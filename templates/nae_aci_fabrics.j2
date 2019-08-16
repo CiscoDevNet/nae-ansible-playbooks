@@ -1,0 +1,15 @@
+{% set COLTEMPLATE = "%-30s| %-20s| %-15s| %-45s| %-20s" %}
+{% set ROWDELIM = "%-30s+%-20s+%-15s+%-45s+%-20s"
+                | format("-"*30,"-"*21,"-"*16,"-"*46,"-"*21) %}
+{% set THEAD = COLTEMPLATE
+                | format("Name","Operational Mode","Status","Fabric ID", "APICs") %}
+
+{{ THEAD }}
+{{ ROWDELIM }}
+{% for fab in nae_aci_fabrics.json.value.data %}
+{{ COLTEMPLATE | format (fab.unique_name, fab.operational_mode, fab.status, fab.uuid, "") }}
+{% for apic in fab.get("apic_hostnames", []) %}
+{{ COLTEMPLATE | format ("","","", "", apic) }}
+{% endfor %}
+{{ ROWDELIM }}
+{% endfor %}

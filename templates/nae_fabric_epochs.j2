@@ -1,0 +1,17 @@
+{% set COLTEMPLATE = "%-25s| %-10s| %-45s| %-25s" %}
+{% set ROWDELIM = "%-25s+%-10s+%-45s+%-25s"
+                | format("-"*25,"-"*11,"-"*46,"-"*16) %}
+{% set THEAD = COLTEMPLATE
+                | format("Analysis Time","Status","Epoch ID","Events") %}
+
+{% for epoch_page in nae_fabric_epochs.results %}
+{{ THEAD }}
+{{ ROWDELIM }}
+{% for epoch in epoch_page.json.value.data %}
+{{ COLTEMPLATE | format (epoch.analysis_completion_time_rfc3339, epoch.status, epoch.epoch_id, "") }}
+{% for event in epoch.event_info %}
+{{ COLTEMPLATE | format ("", "", "", "%s: %d" | format(event.severity, event.count)) }}
+{% endfor %}
+{{ ROWDELIM }}
+{% endfor %}
+{% endfor %}

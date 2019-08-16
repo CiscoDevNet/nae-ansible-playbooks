@@ -1,0 +1,38 @@
+---
+# This playbook queries the NAE API and creates a report with all
+# configured ACI fabrics, their state and the UUID. This ID is needed
+# in the next playbook, nae_fabric_epochs.yml, where all available epochs
+# are fetched from the API for a specific fabric ID.
+
+- name: GET ALL ACI FABRICS
+  hosts: nae-devnet
+
+  # This file provides the session tokens obtained after authentication
+  # against the API. Run nae_api_login.yml to (re)generate the file.
+  vars_files: vars/session.yml
+
+  tasks:
+
+    # Query for the records of all ACI fabrics.
+    - name: Query the NAE API
+      uri:
+        url: "{{ nae.url }}/api/v1/config-services/assured-networks/aci-fabric"
+        method: "GET"
+        body_format: "json"
+        headers: "{{ headers }}"
+        return_content: true
+      register: nae_aci_fabrics
+      delegate_to: localhost
+
+    # Builds a text report from a Jinja2 template and
+    # the data returned by the API call.
+    - name: Create report
+      template:
+        src: "nae_aci_fabrics.j2"
+        dest: "output/nae_aci_fabrics.txt"
+      delegate_to: localhost
+
+    # Print the contents of the file to the terminal
+    - name: Print report to terminal
+      debug:
+        msg: "{{ lookup('file', 'output/nae_aci_fabrics.txt') }}"

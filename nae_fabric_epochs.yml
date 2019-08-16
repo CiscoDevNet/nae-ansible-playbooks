@@ -1,0 +1,90 @@
+---
+# This playbook queries the API for all epochs that belong to
+# an ACI fabric within the specified time frame. Here we get high
+# level results for each epoch's events grouped by severity.
+# To dig deeper into events, we need an epoch ID to query the API
+# further using the nae_epoch_events.yml playbook.
+
+- name: GET EPOCHS FOR AN ACI FABRIC
+  hosts: nae-devnet
+
+  # This file provides the session tokens obtained after authentication
+  # against the API. Run nae_api_login.yml to (re)generate the file.
+  vars_files: vars/session.yml
+
+  vars:
+    # Unique ID for the ACI Fabric to query. It can be found in the
+    # nae_aci_fabrics report.
+    fabric_id: "028308e9-56380965-19c3-463c-8127-ba1007837474"
+    # Sorting criteria: collection_time, analysis_start_time,
+    # analysis_completion_time. More than one sort order can be specified
+    # using comma separated values. Prepend the value with '-' to specify
+    # descending order.
+    sort: "-analysis_completion_time"
+    # A unix timestamp in milliseconds. All epochs with a collection time
+    # later than or equal to the specified value will be returned.
+    from_time: "1565431530000"
+    # A unix timestamp in milliseconds. All epochs with a collection time
+    # earlier than the specified value will be returned.
+    to_time: "1565443731000"
+    # Number of results per page (default 50, max 200)
+    results: 20
+
+  tasks:
+
+    # Query for all epochs that match the criteria. Results will be paged
+    # according to the provided page size, so we're interested in the number
+    # of pages here.
+    - name: Query the NAE API
+      uri:
+        url: "{{ nae.url }}/api/v1/event-services/epochs?\
+                $fabric_id={{ fabric_id }}&\
+                $sort={{ sort }}&\
+                $from_collection_time_msecs={{ from_time }}&\
+                $to_collection_time_msecs={{ to_time }}&\
+                $size={{ results }}"
+        method: "GET"
+        body_format: "json"
+        headers: "{{ headers }}"
+        return_content: true
+      register: nae_epochs
+      delegate_to: localhost
+
+    - debug:
+        msg: "Total epochs matching criteria:
+              {{ nae_epochs.json.value.data_summary.total_count }} in
+              {{ nae_epochs.json.value.data_summary.total_page_count }}
+              pages."
+
+    # Loop over all pages to retrieve the full search results
+    - name: Query the NAE API
+      uri:
+        url: "{{ nae.url }}/api/v1/event-services/epochs?\
+                $fabric_id={{ fabric_id }}&\
+                $sort={{ sort }}&\
+                $from_collection_time_msecs={{ from_time }}&\
+                $to_collection_time_msecs={{ to_time }}&\
+                $size={{ results }}&\
+                $page={{ item }}"
+        method: "GET"
+        body_format: "json"
+        headers: "{{ headers }}"
+        return_content: true
+      register: nae_fabric_epochs
+      delegate_to: localhost
+      loop: "{{ range(0, nae_epochs.json.value.data_summary.total_page_count) | list }}"
+      loop_control:
+        label: "Page {{ item + 1 }} out of {{ nae_epochs.json.value.data_summary.total_page_count }}"
+
+    # Builds a text report from a Jinja2 template and
+    # the data returned by the API call.
+    - name: Create report
+      template:
+        src: "nae_fabric_epochs.j2"
+        dest: "output/nae_fabric_epochs.txt"
+      delegate_to: localhost
+
+    # Print the contents of the file to the terminal
+    - name: Print report to terminal
+      debug:
+        msg: "{{ lookup('file', 'output/nae_fabric_epochs.txt') }}"

@@ -1,0 +1,18 @@
+{% set COLTEMPLATE = "%-25s| %-10s| %-45s| %-25s" %}
+{% set ROWDELIM = "%-25s+%-10s+%-45s+%-25s"
+                | format("-"*25,"-"*11,"-"*46,"-"*16) %}
+
+{{ ROWDELIM }}
+{% for event in nae_event_details.json.value.data %}
+Primary Affected Object:
+  NAME: {{ event.primary_affected_object.name }}
+  TYPE: {{ event.primary_affected_object.type }}
+  ID: {{ event.primary_affected_object.identifier }}
+
+ACI Fabric: {{ event.aci_fabric_settings_dto.unique_name}}
+Description: {{ event.description }}
+Impact: {{ event.impact }}
+{{ "%s/%s/%s/%s" | format (event.smart_event_info.name, event.category.name,
+                        event.sub_category.name, event.severity.name) }}
+{{ ROWDELIM }}
+{% endfor %}

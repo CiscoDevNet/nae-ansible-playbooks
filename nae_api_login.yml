@@ -1,0 +1,57 @@
+---
+# This playbook authenticates against the NAE API and creates
+# a session yaml file (vars/session.yml) with the needed tokens
+# for further API calls.
+
+- name: NAE API AUTHENTICATION
+  hosts: nae-devnet
+
+  tasks:
+
+    # First, retrieve a temporary X-NAE-LOGIN-OTP token (valid 5m)
+    # and the session cookie.
+    - name: Get Login OTP token
+      uri:
+        url: "{{ nae.url }}/api/v1/whoami"
+        method: "GET"
+        body_format: "json"
+        return_content: true
+      register: nae_auth_otp
+      delegate_to: localhost
+
+    - debug:
+        msg: "Got {{ nae_auth_otp.x_nae_login_otp }} - proceeding to login."
+
+    # Login to the NAE using provided credentials and retrieve CSRF token
+    - name: Login to NAE and get session token
+      uri:
+        url: "{{ nae.url }}/api/v1/login"
+        method: "POST"
+        body_format: "json"
+        return_content: true
+        headers:
+          Cookie: "{{ nae_auth_otp.set_cookie }}"
+          X-NAE-LOGIN-OTP: "{{ nae_auth_otp.x_nae_login_otp }}"
+        body:
+          username: "{{ nae.username }}"
+          password: "{{ nae.password }}"
+          domain: "{{ nae.login_domain }}"
+      register: nae_auth_csrf
+      delegate_to: localhost
+
+    # Build the http request headers dictionary for later use in all other
+    # playbooks.
+    - set_fact:
+        nae_session_headers:
+          headers:
+            X-NAE-CSRF-TOKEN: "{{ nae_auth_csrf.x_nae_csrf_token }}"
+            Cookie: "{{ nae_auth_csrf.set_cookie }}"
+            Content-Type: 'application/json'
+            Accept: 'application/json'
+
+    # Save headers dictionary to disk for importing in playbooks.
+    - name: Save session token to vars/session.yml
+      copy:
+        content: "{{ nae_session_headers | to_yaml }}"
+        dest: "vars/session.yml"
+      delegate_to: localhost

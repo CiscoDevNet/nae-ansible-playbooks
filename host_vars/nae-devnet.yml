@@ -1,0 +1,10 @@
+---
+nae:
+  # URL of the NAE Dashboard
+  url: "https://nae-sandbox.cisco.com"
+  # Login credentials
+  username: "developer"
+  password: "C!sco1234567890"
+  login_domain: "Local"
+# Set to true for production setups that use trusted certificates!
+# validate_certs: false

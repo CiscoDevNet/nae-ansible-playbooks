@@ -1,0 +1,56 @@
+
+EPOCH ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54
+SEVERITY: EVENT_SEVERITY_CRITICAL
+
+Event                                                       | Category                 | Subcategory              
+============================================================+==========================+==========================
+UNSUPPORTED_SERVICE_CHAINING_FEATURE_DETECTED               | SYSTEM                   | ASSURANCE_CONTROL        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: ACI Fabric configuration includes Service insertion. This capability is not supported in the current release of CNAE software.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-cb291a0ea83388ddd39a953c29c75d44
+============================================================+==========================+==========================
+BD_SUBNET_MISSING_ON_BORDER_LEAF                            | TENANT_FORWARDING        | SUBNET_ROUTE             
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Bridge domain subnets in a VRF should be present on both the border leaf and the remaining switches on which the bridge domain is deployed. In some cases, the bridge domain may not be deployed on the border leaf switch.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-377480037c4a71f5a6495278a12d4f9c
+============================================================+==========================+==========================
+BD_SUBNET_MISSING_ON_BORDER_LEAF                            | TENANT_FORWARDING        | SUBNET_ROUTE             
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Bridge domain subnets in a VRF should be present on both the border leaf and the remaining switches on which the bridge domain is deployed. In some cases, the bridge domain may not be deployed on the border leaf switch.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-1cc973f2fe0cc1e58d9113f6a8b203e8
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-30b0707ba0b184ccd43b37aa3eb5bf7c
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-97135265c4185eb5caa1cfa2d32d083e
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-254a720ba494deec48796a8b974a849c
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-43fe1d03f9ea822e7052460c878911bb
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-dfce3db6deabb954488276416d1729a4
+============================================================+==========================+==========================
+CONNECTED_EP_LEARNING_ERROR                                 | TENANT_ENDPOINT          | ENDPOINT_LEARNING        
+------------------------------------------------------------+--------------------------+--------------------------
+Description: Endpoint information is not consistent across the fabric leafs and spines.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-3980ec56208a822d98d148b99de73507
+============================================================+==========================+==========================
+ENFORCED_VRF_POLICY_VIOLATION                               | TENANT_SECURITY          | VRF_SECURITY             
+------------------------------------------------------------+--------------------------+--------------------------
+Description: VRF is in enforced mode. APIC policy for implicit deny log is not enforced on Leaf hardware.
+ID: d9e15b75-8792cd91-0e2d-355d-9a03-f28ce554ed54-98d835f0689ef00e15a3782bb093f55b
+============================================================+==========================+==========================

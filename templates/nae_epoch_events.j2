@@ -1,0 +1,22 @@
+{% set COLTEMPLATE = "%-60s| %-25s| %-25s" %}
+{% set ROWDELIM = "%-60s+%-25s+%-25s"
+                | format("-"*60,"-"*26,"-"*26) %}
+{% set ROWDELIMTHICK = ROWDELIM | replace("-", "=") %}
+{% set THEAD = COLTEMPLATE
+                | format("Event","Category","Subcategory") %}
+
+EPOCH ID: {{ epoch_id }}
+SEVERITY: {{ severity }}
+
+{% for event_page in nae_epoch_events.results %}
+{{ THEAD }}
+{{ ROWDELIMTHICK }}
+{% for event in event_page.json.value.data %}
+{{ COLTEMPLATE | format (event.smart_event_info.name, event.category.name,
+                         event.sub_category.name) }}
+{{ ROWDELIM }}
+Description: {{ event.description }}
+ID: {{ event.identifier }}
+{{ ROWDELIMTHICK }}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,10 @@
+---
+nae:
+  # URL of the NAE Dashboard
+  url: "https://candid.svpod.dc-03.com"
+  # Login credentials
+  username: "REPLACEME"
+  password: "REPLACEME"
+  login_domain: "dcv.svpod"
+# Set to true for production setups that use trusted certificates!
+# validate_certs: false

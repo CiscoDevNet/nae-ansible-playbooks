@@ -1,0 +1,42 @@
+---
+# This playbook queries the API for a specific event's details.
+
+- name: GET EVENT DETAILS
+  hosts: nae-devnet
+
+  # This file provides the session tokens obtained after authentication
+  # against the API. Run nae_api_login.yml to (re)generate the file.
+  vars_files: vars/session.yml
+
+  vars:
+    # Unique ID for the Event to query. It can be found in the
+    # nae_epoch_events report.
+    event_id: "d9e15b75-bf1a9847-7a1a-3623-824b-a91dd97b627c-012f72b0f2e14df1a416ac6b17f3b2ca"
+
+  tasks:
+
+    # Query for all events that match the criteria. Results will be paged
+    # according to the provided page size, so we're interested in the number
+    # of pages here.
+    - name: Query the NAE API
+      uri:
+        url: "{{ nae.url }}/api/v1/event-services/smart-events/detail?\
+                $event_id={{ event_id }}"
+        method: "GET"
+        headers: "{{ headers }}"
+        return_content: true
+      register: nae_event_details
+      delegate_to: localhost
+
+    # Builds a text report from a Jinja2 template and
+    # the data returned by the API call.
+    - name: Create report
+      template:
+        src: "nae_event_details.j2"
+        dest: "output/nae_event_details.txt"
+      delegate_to: localhost
+
+    # Print the contents of the file to the terminal
+    - name: Print report to terminal
+      debug:
+        msg: "{{ lookup('file', 'output/nae_event_details.txt') }}"

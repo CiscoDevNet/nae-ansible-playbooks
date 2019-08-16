@@ -1,0 +1,12 @@
+
+-------------------------+-----------+----------------------------------------------+----------------         
+Primary Affected Object:
+  NAME: sbx_shared
+  TYPE: CANDID_OBJECT_TYPE_VRF
+  ID: uni/tn-common/ctx-sbx_shared
+
+ACI Fabric: aci-k8tes-sandbox
+Description: VRF is in enforced mode. APIC policy for implicit deny log is not enforced on Leaf hardware.
+Impact: Unauthorized traffic will be allowed in this VRF.
+ENFORCED_VRF_POLICY_VIOLATION/TENANT_SECURITY/VRF_SECURITY/EVENT_SEVERITY_CRITICAL
+-------------------------+-----------+----------------------------------------------+----------------         
